@@ -65,12 +65,27 @@ class Cell:
         self._y2 = y2
         self._win = win
 
+    # Draws cells
     def draw(self, canvas, fill_color="white"):
         if self.has_left_wall:
-            canvas.create_line(self._x1, self._y1, self._x1, self._y2, fill=fill_color)
+            canvas.create_line(self._x1, self._y1, self._x1, self._y2, fill=fill_color, width=3)
         if self.has_top_wall:
-            canvas.create_line(self._x1, self._y1, self._x2, self._y1, fill=fill_color)
+            canvas.create_line(self._x1, self._y1, self._x2, self._y1, fill=fill_color, width=3)
         if self.has_right_wall:
-            canvas.create_line(self._x2, self._y1, self._x2, self._y2, fill=fill_color)
+            canvas.create_line(self._x2, self._y1, self._x2, self._y2, fill=fill_color, width=3)
         if self.has_bottom_wall:
-            canvas.create_line(self._x1, self._y2, self._x2, self._y2, fill=fill_color)
+            canvas.create_line(self._x1, self._y2, self._x2, self._y2, fill=fill_color, width=3)
+
+    # Draws a line through the middle of the cell to track user movement throughout maze
+    def draw_move(self, to_cell, canvas, undo=False):
+        fill_color = "red" if not undo else "gray"
+
+        # Center of the current cell
+        mid_x1 = (self.x1 + self.x2) / 2
+        mid_y1 = (self.y1 + self.y2) / 2
+
+        # Center of the new cell
+        mid_x2 = (to_cell.x1 + to_cell.x2)/2
+        mid_y2 = (to_cell.y1 + to_cell.y2)/2
+
+        canvas.create_line(mid_x1, mid_y1, mid_x2, mid_y2, fill=fill_color, width=2)
