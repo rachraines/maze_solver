@@ -89,3 +89,46 @@ class Cell:
         mid_y2 = (to_cell.y1 + to_cell.y2)/2
 
         canvas.create_line(mid_x1, mid_y1, mid_x2, mid_y2, fill=fill_color, width=2)
+
+class Maze:
+    def __init__(
+            self,
+            x1,
+            y1,
+            num_rows,
+            num_cols,
+            cell_size_x,
+            cell_size_y,
+            win,
+    ):
+        self.x1 = x1
+        self.y1 = y1
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.cell_size_x = cell_size_x
+        self.cell_size_y = cell_size_y
+        self.win = win
+        self._create_cells()
+
+    def _create_cells(self):
+        # Initialize all cells list as a list of lists
+        self._cells = []
+        start_x = self.x1
+        
+        for col in range(self.num_cols):
+            start_y = self.y1
+            
+            # Creates a new list for each column
+            col_list = []
+            
+            # Creates a cell for each row item in the column
+            for row in range(self.num_rows):
+                cell = Cell(start_x, start_x + self.cell_size_x, start_y, start_y + self.cell_size_y, self.win)
+                col_list.append(cell)
+                cell.draw(self.win._Window__canvas)
+                start_y += self.cell_size_y
+            
+            self._cells.append(col_list)
+            start_x += self.cell_size_x
+        
+            
