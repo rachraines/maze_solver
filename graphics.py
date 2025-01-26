@@ -55,7 +55,7 @@ class Line:
         )
 
 class Cell:
-    def __init__(self, x1, x2, y1, y2, win):
+    def __init__(self, x1, x2, y1, y2, win=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -100,7 +100,7 @@ class Maze:
             num_cols,
             cell_size_x,
             cell_size_y,
-            win,
+            win=None,
     ):
         self.x1 = x1
         self.y1 = y1
@@ -121,29 +121,32 @@ class Maze:
             
             # Creates a cell for each row item in the column
             for row in range(self.num_rows):
-                self._draw_cell(row, col)
-                cell = Cell(self.x1, self.x2, self.y1, self.y2, self.win)
+                x1, x2, y1, y2 = self._draw_cell(row, col)
+                cell = Cell(x1, x2, y1, y2, self.win)
                 col_list.append(cell)
             
             self._cells.append(col_list)
 
     def _draw_cell(self, i, j):
         # Calculates left and right side of the cell
-        cell_x1 = self.x1 + j * self.cell_size_x
-        cell_x2 = cell_x1 + self.cell_size_x
+        x1 = self.x1 + j * self.cell_size_x
+        x2 = x1 + self.cell_size_x
 
         # Calculates top and bottom of the cell
-        cell_y1 = self.y1 + i * self.cell_size_y
-        cell_y2 = cell_y1 + self.cell_size_y
+        y1 = self.y1 + i * self.cell_size_y
+        y2 = y1 + self.cell_size_y
 
         # Draws the cell
-        canvas = self.win._Window__canvas
-        cell = Cell(cell_x1, cell_x2, cell_y1, cell_y2)
-        cell.draw(canvas)
+        if self.win is not None:
+            canvas = self.win._Window__canvas
+            cell = Cell(x1, x2, y1, y2)
+            cell.draw(canvas)
         
-        self._animate()
+            self._animate()
+        return x1, x2, y1, y2
 
     def _animate(self):
-        self.win.redraw()
-        time.sleep(0.05)
+        if self.win is not None:
+            self.win.redraw()
+            time.sleep(0.05)
             
