@@ -237,3 +237,8 @@ class Maze:
 
             # Recursively move to the chosen cell
             self._break_walls_r(new_i, new_j)
+
+    def _reset_cells_visited(self):
+        for i in range(self._num_cols):
+            for j in range(self._num_rows):
+                self._cells[i][j].visited = False
