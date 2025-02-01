@@ -1,5 +1,6 @@
 from tkinter import Tk, BOTH, Canvas
 import time
+import random
 
 class Window:
     def __init__(self, width, height):
@@ -65,6 +66,7 @@ class Cell:
         self._y1 = None
         self._y2 = None
         self._win = win
+        self.visited = False
 
     # Draws cells
     def draw(self, x1, y1, x2, y2):
@@ -134,6 +136,7 @@ class Maze:
             cell_size_x,
             cell_size_y,
             win=None,
+            seed=None
     ):
         self._cells = []
         self._x1 = x1
@@ -143,6 +146,10 @@ class Maze:
         self._cell_size_x = cell_size_x
         self._cell_size_y = cell_size_y
         self._win = win
+
+        if seed is not None:
+            random.seed(seed)
+
         
         self._create_cells()
         self._break_entrance_and_exit()
@@ -188,3 +195,45 @@ class Maze:
         # Removes bottom wall from bottom right cell
         self._cells[self._num_cols - 1][self._num_rows - 1].has_bottom_wall = False
         self._draw_cell(self._num_cols - 1, self._num_rows - 1)
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+
+        while True:
+            need_to_visit = []
+
+            # Checks if left cell exists and if it's been visited
+            if i > 0 and not self._cells[i - 1][j].visited:
+                need_to_visit.append(("left", i - 1, j))
+            # Checks if right cell exists and if it's been visited
+            if i < self._num_cols - 1 and not self._cells[i + 1][j].visited:
+                need_to_visit.append(("right", i + 1, j))
+            # Checks if top cell exists and if it's been visited
+            if j > 0 and not self._cell[i][j - 1].visited:
+                need_to_visit.append(("top", i , j - 1))
+            # Checks if bottom cell exists and if it's been visited
+            if j < self._num_rows - 1 and not self._cells[i][j + 1].visited:
+                need_to_visit.append("bottom", i, j + 1)
+            if not need_to_visit:
+                self._cells[i][j].draw()
+                return
+            
+            # Picks a random direction to go in
+            direction, new_i, new_j = random.choice(need_to_visit)
+            
+            # Breaks wall between current cell and new cell
+            if direction == "left":
+                self._cells[i][i].has_left_wall = False
+                self._cells[new_i][new_j].has_right_wall = False
+            elif direction == "right":
+                self._cells[i][i].has_right_wall = False
+                self._cells[new_i][new_j].has_left_wall = False
+            elif direction == "top":
+                self._cells[i][i].has_top_wall = False
+                self._cells[new_i][new_j].has_bottom_wall = False
+            elif direction == "bottom":
+                self._cells[i][i].has_bottom_wall = False
+                self._cells[new_i][new_j].has_top_wall = False
+
+            # Recursively move to the chosen cell
+            self._break_walls_r(new_i, new_j)
