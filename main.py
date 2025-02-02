@@ -22,7 +22,7 @@ def main():
     maze._break_walls_r(0, 0)
     
     # Reset visited status for solving
-    maze._reset_cells_visited
+    maze._reset_cells_visited()
 
     # Solve the maze
     solved = maze._solve_r(0, 0)

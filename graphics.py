@@ -116,15 +116,15 @@ class Cell:
         fill_color = "red" if not undo else "gray"
 
         # Center of the current cell
-        mid_x1 = (self.x1 + self.x2) / 2
-        mid_y1 = (self.y1 + self.y2) / 2
+        mid_x1 = (self._x1 + self._x2) / 2
+        mid_y1 = (self._y1 + self._y2) / 2
 
         # Center of the new cell
-        mid_x2 = (to_cell.x1 + to_cell.x2)/2
-        mid_y2 = (to_cell.y1 + to_cell.y2)/2
+        mid_x2 = (to_cell._x1 + to_cell._x2) / 2
+        mid_y2 = (to_cell._y1 + to_cell._y2) / 2
 
         line = Line(Point(mid_x1, mid_y1), Point(mid_x2, mid_y2))
-        self._win.draw_line(line, fill_color, width=2)
+        self._win.draw_line(line, fill_color)
 
 class Maze:
     def __init__(
@@ -251,7 +251,7 @@ class Maze:
         self._animate()
         
         # Marks the current cell as visited
-        self._cells[i][j].vistied = True
+        self._cells[i][j].visited = True
         
         # If the current cell is the bottom right cell, return True
         if i == self._num_cols - 1 and j == self._num_rows - 1:
