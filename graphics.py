@@ -209,13 +209,13 @@ class Maze:
             if i < self._num_cols - 1 and not self._cells[i + 1][j].visited:
                 need_to_visit.append(("right", i + 1, j))
             # Checks if top cell exists and if it's been visited
-            if j > 0 and not self._cell[i][j - 1].visited:
+            if j > 0 and not self._cells[i][j - 1].visited:
                 need_to_visit.append(("top", i , j - 1))
             # Checks if bottom cell exists and if it's been visited
             if j < self._num_rows - 1 and not self._cells[i][j + 1].visited:
-                need_to_visit.append("bottom", i, j + 1)
+                need_to_visit.append(("bottom", i, j + 1))
             if not need_to_visit:
-                self._cells[i][j].draw()
+                self._draw_cell(i, j)
                 return
             
             # Picks a random direction to go in
@@ -223,16 +223,16 @@ class Maze:
             
             # Breaks wall between current cell and new cell
             if direction == "left":
-                self._cells[i][i].has_left_wall = False
+                self._cells[i][j].has_left_wall = False
                 self._cells[new_i][new_j].has_right_wall = False
             elif direction == "right":
-                self._cells[i][i].has_right_wall = False
+                self._cells[i][j].has_right_wall = False
                 self._cells[new_i][new_j].has_left_wall = False
             elif direction == "top":
-                self._cells[i][i].has_top_wall = False
+                self._cells[i][j].has_top_wall = False
                 self._cells[new_i][new_j].has_bottom_wall = False
             elif direction == "bottom":
-                self._cells[i][i].has_bottom_wall = False
+                self._cells[i][j].has_bottom_wall = False
                 self._cells[new_i][new_j].has_top_wall = False
 
             # Recursively move to the chosen cell

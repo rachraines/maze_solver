@@ -4,10 +4,10 @@ def main():
     # Define maze dimensions
     win_width = 800
     win_height = 600
-    num_rows = 10
-    num_cols = 12
-    cell_size_x = win_width // num_cols
-    cell_size_y = win_width // num_rows
+    num_rows = 9
+    num_cols = 10
+    cell_size_x = 20
+    cell_size_y = 20
 
     # Create the window
     win = Window(win_width, win_height)
