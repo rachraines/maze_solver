@@ -1,33 +1,38 @@
-from graphics import Window, Line, Point, Cell
+from graphics import Window, Line, Point, Cell, Maze
 
 def main():
-    # Create a window with dimensions 800x600
-    win = Window(800, 600)
+    # Define maze dimensions
+    win_width = 800
+    win_height = 600
+    num_rows = 10
+    num_cols = 12
+    cell_size_x = win_width // num_cols
+    cell_size_y = win_width // num_rows
+
+    # Create the window
+    win = Window(win_width, win_height)
     
     # Acccess the canvas from the window object
     canvas = win._Window__canvas
 
-    #line1 = Line(Point(50, 50), Point(100, 100))
-    #win.draw_line(line1)
-   
-    cell1 = Cell(50, 100, 50, 100, win)
-    cell1.draw(canvas)
+    # Create the maze
+    maze = Maze(10, 10, num_rows, num_cols, cell_size_x, cell_size_y, win)
     
-    cell2 = Cell(110, 160, 50, 100, win)
-    cell2.has_top_wall = False
-    cell2.draw(canvas)
+    # Generate the maze layout using recursive wall breaking
+    maze._break_walls_r(0, 0)
+    
+    # Reset visited status for solving
+    maze._reset_cells_visited
 
-    cell3 = Cell(170, 220, 50, 100, win)
-    cell3.has_left_wall = False
-    cell3.has_bottom_wall = False
-    cell3.draw(canvas)
+    # Solve the maze
+    solved = maze._solve_r(0, 0)
 
-    cell4 = Cell(230, 280, 50, 100, win)
-    cell4.has_top_wall = False
-    cell4.has_left_wall = False
-    cell4.has_bottom_wall = False
-    cell4.draw(canvas)
+    if solved:
+        print("Maze solved successfully!")
+    else:
+        print("Maze could not be solved.")
 
+    # Keep window open until closed by user
     win.wait_for_close()
 
 main()

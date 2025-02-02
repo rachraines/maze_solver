@@ -242,3 +242,46 @@ class Maze:
         for i in range(self._num_cols):
             for j in range(self._num_rows):
                 self._cells[i][j].visited = False
+
+    def solve(self):
+        return self._solve_r(i=0, j=0)
+    
+    def _solve_r(self, i, j):
+        # Animates each step of the solving process
+        self._animate()
+        
+        # Marks the current cell as visited
+        self._cells[i][j].vistied = True
+        
+        # If the current cell is the bottom right cell, return True
+        if i == self._num_cols - 1 and j == self._num_rows - 1:
+            return True
+        
+        # Define possible movement directions
+        directions = [
+            (i - 1, j, "left"),
+            (i + 1, j, "right"),
+            (i, j - 1, "top"),
+            (i, j + 1, "bottom")
+        ]
+
+        # Try moving in each direction
+        for ni, nj, wall in directions:
+            # Ensures the next cell is in bounds
+            if 0 <= ni < self._num_cols and 0 <= nj < self._num_rows:
+                next_cell = self._cells[ni][nj]
+
+                # Check if there's no wall blocking the path and the next cell is unvisited
+                if not getattr(self._cells[i][j], f"has_{wall}_wall") and not next_cell.visited:
+                    self._cells[i][j].draw_move(next_cell)
+
+                    # Recursively solve the maze
+                    if self._solve_r(ni, nj):
+                        return True
+                    
+                    # If the path fails, undo the move
+                    self._cells[i][j].draw_move(next_cell, undo=True)
+
+        # If all directions fail, return false
+        return False
+
